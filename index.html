@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        
+     <title>Prova 02 Sítios Web 2/Sistema</title>
+        
+        <style type="text/css">
+           
+        @import 
+            url('https://fonts.googleapis.com/css?family=Mali&display=swap" rel="stylesheet');
+            
+            body {
+  margin: 0;
+  background: #000000;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Mali', cursive;
+
+  --container-width: 900px;
+  --container-height: 700px;
+  --menu-size: 100px;
+}
+
+.container {
+  width: var(--container-width);
+  height: var(--container-height);
+  background: #482844;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 1em;
+}
+
+.menu {
+  list-style: none;
+  padding: 2em;
+}
+
+.menu li {
+  margin-bottom: 2em;
+  border: 5px #aaa solid;
+  width: var(--menu-size);
+  transition: all 0.5s linear;
+}
+
+.menu span {
+  display: none;
+}
+
+.menu .img {
+  background: 80%;
+  background: calc(80%);
+  background-size: auto var(--menu-size);
+  background-repeat: no-repeat;
+  height: var(--menu-size);
+  width: var(--menu-size);
+  cursor: pointer;
+}
+
+.menu li:hover {
+  border-color: #000;
+}
+
+li.current {
+  border-color: #000;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 80% 100%, 0% 100%);
+  position: relative;
+}
+
+.current span {
+  display: inline;
+  color: #000;
+  position: absolute;
+  bottom: 0;
+  left: 30%;
+  font-size: 1.5em;
+}
+
+.current-gallery {
+  display: flex;
+  flex-flow: wrap;
+  flex-direction: column;
+  align-content: center;
+  align-items: stretch;
+  justify-content: center;
+  height: var(--container-height);
+  background: #582844;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.current-gallery.small {
+  transform: scale(0) rotateY(360deg);
+}
+
+.current-gallery div {
+  width: calc(100% / 2.2);
+  margin: 8px;
+}
+
+.current-gallery img {
+  box-sizing: border-box;
+  border-width: 0;
+  transition: 0.3s all linear;
+}
+
+.current-gallery img {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+}
+
+.detail {
+  transition: 0.7s linear all;
+  width: 0;
+  height: 0;
+}
+
+.detail.show {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: #59514f99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.detail.show img {
+  max-height: 80vh;
+  max-width: 80vw;
+}
+
+.current-gallery img:hover {
+  outline: 3px solid #000000;
+}
+            
+ h1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 10vh;
+  width: 30vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ffffff;
+              
+            }
+
+ p {
+  font-size: 0.8em;
+  color: #633080;
+  text-align: center;
+  text-shadow: 1px 1px 1px #fff; 
+  height: 60vh;
+  padding: 0%; 
+             }
+</style>
+
+        <script type="text/javascript" src="js/jquery-3.4.1.js"></script>
+        <script type="text/javascript">
+ 
+ const COMPUTER = [
+    'https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+    'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+    'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+    'https://images.unsplash.com/photo-1484417894907-623942c8ee29?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+    'https://images.unsplash.com/photo-1505238680356-667803448bb6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+    'https://images.unsplash.com/photo-1493119508027-2b584f234d6c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+]       
+
+            
+const NATURE = [
+    'https://cdn.pixabay.com/photo/2018/01/14/23/12/nature-3082832__340.jpg',
+    'https://cdn.pixabay.com/photo/2015/09/09/16/05/forest-931706__340.jpg',
+    'https://cdn.pixabay.com/photo/2016/08/11/23/48/italy-1587287__340.jpg',
+    'https://cdn.pixabay.com/photo/2017/04/09/09/56/avenue-2215317__340.jpg',
+    'https://cdn.pixabay.com/photo/2013/11/28/10/03/autumn-219972__340.jpg',
+    'https://cdn.pixabay.com/photo/2018/08/21/23/29/fog-3622519__340.jpg',
+]
+
+
+const MUSIC = [
+    'https://images.pexels.com/photos/860662/pexels-photo-860662.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'https://images.pexels.com/photos/237459/pexels-photo-237459.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'https://images.pexels.com/photos/995301/pexels-photo-995301.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'https://images.pexels.com/photos/258283/pexels-photo-258283.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'https://images.pexels.com/photos/164853/pexels-photo-164853.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+    'https://images.pexels.com/photos/121745/pexels-photo-121745.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+]
+
+const CHRISTMAS = [
+   'https://images.unsplash.com/photo-1512619996179-6f597e8e56a2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60', 
+   'https://images.unsplash.com/photo-1544427998-ce5e0a5b2bd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+   'https://images.unsplash.com/photo-1448006732377-621c42b3a633?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+   'https://images.unsplash.com/photo-1479091703591-dfbc2986aaa4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+   'https://images.unsplash.com/photo-1509042283213-f7167abd77f0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+   'https://images.unsplash.com/photo-1529973625058-a665431328fb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',    
+    
+    
+]
+
+const GALLERY_LIST = [
+    COMPUTER,
+    NATURE,
+    MUSIC,
+    CHRISTMAS,
+]
+
+let currentInx = 0
+
+window.onload = () => {
+    document.querySelectorAll('li').forEach((element, inx) => {
+        element.onclick = (event) => changeGallery(event, inx)
+    })
+
+    document.querySelector('.detail').onclick = (event) => {
+        document.querySelector('.detail').innerHTML = ''
+        event.currentTarget.classList.remove('show')
+    }
+        
+    loadGallery(currentInx)
+}
+
+const changeGallery = (event, inx) => {
+    if (event.currentTarget.className === 'current') {
+        return
+    }
+    currentInx = inx
+    document.querySelector('.current').classList.remove('current')
+    event.currentTarget.classList.add('current')
+    loadGallery(currentInx)
+}
+
+const loadGallery = (currentInx) => {
+    document.querySelector('.current-gallery').innerHTML = ''
+    document.querySelector('.current-gallery').classList.add('small')
+    window.setTimeout(() => {
+        document.querySelector('.current-gallery').classList.remove('small')  
+    }, 800)
+
+    GALLERY_LIST[currentInx].forEach(url => {
+        const div = document.createElement('div')
+        div.innerHTML = `<img src=${ url } />`
+        document.querySelector('.current-gallery').appendChild(div)
+        document.body.classList.add('scroll');
+    })
+
+    document.querySelectorAll('.current-gallery div').forEach(element =>
+        element.onclick = (event) => showImage(event.currentTarget)
+    )
+}
+
+const showImage = (div) => {
+    const dialog = document.querySelector('.detail')
+    dialog.appendChild(div.cloneNode(true))
+    dialog.classList.add('show')
+    
+    const links = Array.prototype.slice.call(document.querySelectorAll('[data-link]')),
+sections = Array.prototype.slice.call(document.querySelectorAll('[data-section]'));
+const preloader = document.querySelector('.preloader');
+const wrapper = document.querySelector('.wrapper');
+const bt = document.querySelector('.bt-menu');
+const boxMenu = document.querySelector('.box-menu');
+    
+    const app = (function(){
+  'use strict';
+  return {
+    init: function(){
+      document.querySelector('[data-link="home"]').classList.add('active');
+      document.querySelector('[data-section="home"]').classList.add('show-section');
+      document.body.classList.add('scroll');
+      loader();
+      menu();
+      toggleSections();
+      lightModal();
+    }
+  };
+})();
+    
+    window.addEventListener('load',app.init,false);
+}
+    
+
+const app = (function(){
+  'use strict';
+  return {
+    init: function(){
+      document.querySelector('[data-link="home"]').classList.add('active');
+      document.querySelector('[data-section="home"]').classList.add('show-section');
+      document.body.classList.add('scroll');
+      loader();
+      menu();
+      toggleSections();
+      lightModal();
+    }
+  };
+})();
+
+
+window.addEventListener('load',app.init,false);
+
+
+function menu(){
+  bt.addEventListener('click',function(){
+      if(bt.classList.contains('close')){
+        bt.classList.remove('close');
+        boxMenu.classList.remove('show');
+        document.body.classList.add('scroll');
+      }else{
+        bt.classList.add('close');
+        boxMenu.classList.add('show');
+        document.body.classList.remove('scroll');
+      }
+  });
+}
+
+
+
+function loader(){
+  preloader.classList.add('hide');
+  const t = setTimeout(function(){
+    wrapper.classList.remove('hide');
+    clearInterval(t);
+  },500);
+}
+
+
+function toggleSections(){
+  Array.prototype.forEach.call(links,function(o,i){
+    o.addEventListener('click',function(e){
+      const section = document.querySelector('[data-section="'+this.getAttribute('data-link')+'"]');
+      e.preventDefault();
+      removeLinks(function(){
+        o.classList.add('active');
+        section.classList.add('show-section');
+        // hide menu
+        bt.classList.remove('close');
+        boxMenu.classList.remove('show');
+        document.body.classList.add('scroll');
+      });
+    });
+  });
+}
+
+
+
+function removeLinks(_success){
+  Array.prototype.forEach.call(links,function(o,i){
+    o.classList.remove('active');});
+  Array.prototype.forEach.call(sections,function(o,i){
+   o.classList.remove('show-section');
+  });
+  if(_success()) return _success();
+}
+
+
+function lightModal(){
+  const links = document.querySelectorAll('.lightCustom'), 
+  arrayOfLinks = Array.prototype.slice.call(links);
+  Array.prototype.forEach.call(arrayOfLinks, function (obj, index) {
+    obj.addEventListener('click', function (e) {
+        e.preventDefault();
+        const title = obj.querySelector('.box_title span') ? obj.querySelector('.box_title span').innerHTML : '...';
+        const desc = obj.querySelector('.box_description') ? obj.querySelector('.box_description').innerHTML : desc = '';
+        document.querySelector('.lightModal').classList.add('show');
+        document.querySelector('.lightModal-title').innerHTML = title;
+        document.querySelector('.lightModal-desc').innerHTML = desc;
+        document.querySelector('.lightModal-image').src = obj.href;
+        document.querySelector('.lightModal-image').alt = title;
+        document.body.classList.remove('scroll');
+    });
+    
+    document.querySelector('.lightModal-close').addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector('.lightModal').classList.remove('show');
+        document.body.classList.add('scroll');
+    });
+  });
+}
+
+        </script>
+
+        <meta charset="UTF-8">
+        <meta name="Cássia Santos RA: 2160579" content="Prova02 Sítios Web 2">
+        
+    </head>
+    <body>
+        <h1 id="photographs"><i>A arte de fotografar</i></h1>
+        
+        
+        
+          <p>A fotografia, antes de tudo é um testemunho.<br>
+Quando se aponta a câmara<br> para algum objeto ou sujeito,<br> constrói-se um significado,<br>
+faz-se uma escolha,<br> seleciona-se um tema e conta-se uma história,<br>
+cabe a nós, espectadores,<br> o imenso desafio de lê-las.<br>
+Como é bom quando uma foto tira tudo <br>de você ou revela exatamente o que você é!!!<br>
+Já que os seres humanos não enxergue como realmente somos!!!<br>
+O melhor álbum de fotografia é a nossa memória,<br> nela ficam gravadas fotos reais de<br>
+momentos bons e ruins de nossa vida.<br>
+Enfim…
+Cada momento é um flash!!!!<br>
+              Rood </p>      
+  
+            <div class="container">
+        <nav>
+            <ul class="menu">
+                
+             <li class="current"> 
+              <div class="img" 
+                        style="background-image: url('https://images.unsplash.com/photo-1499673610122-01c7122c5dcb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60')">
+                    </div>
+                    <span>Computador</span>
+                </li>   
+                
+                <li>
+                    <div class="img" 
+                         style="background-image: url('https://cdn.pixabay.com/photo/2016/09/19/07/01/lake-irene-1679708__340.jpg')">
+                    </div>
+                    <span>Natureza</span>
+                </li>
+                
+                <li>
+                    <div class="img" 
+                        style="background-image: url('https://images.pexels.com/photos/164697/pexels-photo-164697.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500')">
+                    </div>
+                    <span>Música</span>
+                </li>
+                <li>
+                    <div class="img" 
+                        style="background-image: url('https://images.unsplash.com/photo-1518888732246-9f52469bfa65?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60')">
+                    </div>
+                    <span>Natal</span>
+                </li>
+            </ul>
+        </nav>
+        <div class="gallery">
+            <article class="current-gallery"></article>
+        </div>
+        <div class="detail"></div>
+    </div>
+        
+      
+        
+    </body>
+</html>
